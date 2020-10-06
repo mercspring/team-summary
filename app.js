@@ -44,7 +44,9 @@ const getEmployeeData = (answers) => {
                 getEmployeeData()
             });
         } else{
-            console.log(render(employees));
+            fs.writeFile("output.html",render(employees), (err) =>{
+                if(err) throw err;
+            });
         }
 
     })
