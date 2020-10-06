@@ -24,27 +24,27 @@ console.log("Welcome Manager. Please enter your details and then you will be ask
 // and to create objects for each team member (using the correct classes as blueprints!)
 inquirer.prompt(beginQus).then((answers) => {
     if (answers.ready) {
-        inquirer.prompt(managerQuestions).then((answers) => {
-            getEmployeeData(answers)
+        inquirer.prompt(managerQuestions).then(({name,id,email,flex}) => {
+            employees.push(new Manager(name,id,email,flex))
+            getEmployeeData()
         })
     }
 })
 
 const getEmployeeData = (answers) => {
-    employees.push(answers);
     inquirer.prompt(employeeTypeQus).then((answers) => {
         if (answers.employeeType === 'intern') {
-            inquirer.prompt(internQuestions).then((answers) => {
-                employees.push(answers);
+            inquirer.prompt(internQuestions).then(({name,id,email,flex}) => {
+                employees.push(new Intern(name,id,email,flex));
                 getEmployeeData()
             })
         } else if (answers.employeeType === 'engineer') {
-            inquirer.prompt(engineerQuestions).then((answers) => {
-                employees.push(answers);
+            inquirer.prompt(engineerQuestions).then(({name,id,email,flex}) => {
+                employees.push(new Engineer(name,id,email,flex));
                 getEmployeeData()
             });
         } else{
-            console.table(employees)
+            console.log(render(employees));
         }
 
     })
