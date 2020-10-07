@@ -1,7 +1,7 @@
 const Manager = require("./lib/Manager");
 const Engineer = require("./lib/Engineer");
 const Intern = require("./lib/Intern");
-const {employeeTypeQus, beginQus, managerQuestions, engineerQuestions, internQuestions} = require("./lib/Questions")
+const { employeeTypeQus, beginQus, managerQuestions, engineerQuestions, internQuestions } = require("./lib/Questions")
 const inquirer = require("inquirer");
 const path = require("path");
 const fs = require("fs");
@@ -24,8 +24,8 @@ console.log("Welcome Manager. Please enter your details and then you will be ask
 // and to create objects for each team member (using the correct classes as blueprints!)
 inquirer.prompt(beginQus).then((answers) => {
     if (answers.ready) {
-        inquirer.prompt(managerQuestions).then(({name,id,email,flex}) => {
-            employees.push(new Manager(name,id,email,flex))
+        inquirer.prompt(managerQuestions).then(({ name, id, email, flex }) => {
+            employees.push(new Manager(name, id, email, flex))
             getEmployeeData()
         })
     }
@@ -34,18 +34,30 @@ inquirer.prompt(beginQus).then((answers) => {
 const getEmployeeData = (answers) => {
     inquirer.prompt(employeeTypeQus).then((answers) => {
         if (answers.employeeType === 'intern') {
-            inquirer.prompt(internQuestions).then(({name,id,email,flex}) => {
-                employees.push(new Intern(name,id,email,flex));
+            inquirer.prompt(internQuestions).then(({ name, id, email, flex }) => {
+                employees.push(new Intern(name, id, email, flex));
                 getEmployeeData()
             })
         } else if (answers.employeeType === 'engineer') {
-            inquirer.prompt(engineerQuestions).then(({name,id,email,flex}) => {
-                employees.push(new Engineer(name,id,email,flex));
+            inquirer.prompt(engineerQuestions).then(({ name, id, email, flex }) => {
+                employees.push(new Engineer(name, id, email, flex));
                 getEmployeeData()
             });
-        } else{
-            fs.writeFile("output.html",render(employees), (err) =>{
-                if(err) throw err;
+        } else {
+            fs.mkdir("./output", function (err) {
+                if (err) {
+                    if (err.code == 'EEXIST') {
+                        fs.writeFile("output/output.html", render(employees), (err) => {
+                            if (err) throw err;
+                        })
+
+                    }
+                    else console.log(err); // something else went wrong
+                } else {
+                    fs.writeFile("./output/output.html", render(employees), (err) => {
+                        if (err) throw err;
+                    })
+                }
             });
         }
 
